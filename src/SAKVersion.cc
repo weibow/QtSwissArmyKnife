@@ -33,14 +33,14 @@ SAKVersion::SAKVersion(QWidget *parent)
     email = ui->labelEmail;
     qq = ui->labelQQ;
     blog = ui->labelBlog;
-    blog->installEventFilter(this);
+  //  blog->installEventFilter(this);
     blog->setCursor(Qt::PointingHandCursor);
     copyrightLabel = ui->copyrightLabel;
 
     copyQQ = ui->pushButtonCopy;
 
     version->setText(reinterpret_cast<SAKApplication*>(qApp)->applicationVersion());
-    datetime->setText(buildDate.toString("yyyy/MM/dd") + " " + QString(__TIME__));
+    datetime->setText(buildDate.toString("yyyy/MM/dd") + " " + QString(__TIME__) + QString(__DATE__));
     author->setText(QString("Qter"));
     email->setText(QString("wuuhii@outlook.com"));
     qq->setText(QString("952218522"));
@@ -60,12 +60,12 @@ SAKVersion::~SAKVersion()
 
 bool SAKVersion::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == blog){
-        if (e->type() == QEvent::MouseButtonPress){
-            QDesktopServices::openUrl(QUrl(blog->text()));
-            return true;
-        }
-    }
+//    if (o == blog){
+//        if (e->type() == QEvent::MouseButtonPress){
+//            QDesktopServices::openUrl(QUrl(blog->text()));
+//            return true;
+//        }
+//    }
 
     return QDialog::eventFilter(o, e);
 }
@@ -76,4 +76,24 @@ void SAKVersion::copyQQNum()
     temp.setText(qq->text());
     temp.selectAll();
     temp.copy();
+}
+
+void SAKVersion::on_pushButton2_clicked()
+{
+
+}
+
+void SAKVersion::on_pushButton2_clicked(bool checked)
+{
+
+}
+
+void SAKVersion::on_pushButton2_pressed()
+{
+
+}
+
+void SAKVersion::on_pushButtonCopy_clicked()
+{
+
 }

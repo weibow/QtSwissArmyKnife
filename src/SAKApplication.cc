@@ -58,11 +58,11 @@ void SAKApplication::installLanguage()
         qmName = language.split('-').first();
     }
 
-    qtBaeTranslator.load(QString(":/translations/qt/qtbase_%1.qm").arg(qmName));
-    qApp->installTranslator(&qtBaeTranslator);
-
-    qtTranslator.load(QString(":/translations/qt/qt_%1.qm").arg(qmName));
-    qApp->installTranslator(&qtTranslator);
+//    qtBaeTranslator.load(QString(":/translations/qt/qtbase_%1.qm").arg(qmName));
+//    qApp->installTranslator(&qtBaeTranslator);
+//
+//    qtTranslator.load(QString(":/translations/qt/qt_%1.qm").arg(qmName));
+//    qApp->installTranslator(&qtTranslator);
 
     sakTranslator.load(QString(":/translations/sak/SAK_%1.qm").arg(qmName));
     qApp->installTranslator(&sakTranslator);
