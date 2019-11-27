@@ -126,6 +126,7 @@ void SAKMainWindow::AddTab()
     this->mpTabWidget->addTab(new SAKUdpDebugPage,          tr("UDP调试"));
     this->mpTabWidget->addTab(new SAKTcpClientDebugPage,    tr("TCP客户端"));
     this->mpTabWidget->addTab(new SAKTcpServerDebugPage,    tr("TCP服务器"));
+    //this->mpTabWidget->addTab(new )
 
     /*
      * 隐藏关闭按钮（必须在调用setTabsClosable()函数后设置，否则不生效）
