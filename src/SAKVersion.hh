@@ -46,10 +46,6 @@ private:
     void openBlogUrl();
 private slots:
     void copyQQNum();
-    void on_pushButton2_clicked();
-    void on_pushButton2_clicked(bool checked);
-    void on_pushButton2_pressed();
-    void on_pushButtonCopy_clicked();
 };
 
 #endif

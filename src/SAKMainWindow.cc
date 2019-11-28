@@ -28,6 +28,8 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QDesktopServices>
+#include <QProcess>
+#include <QDir>
 
 #include "SAKGlobal.hh"
 #include "SAKVersion.hh"
@@ -403,8 +405,16 @@ void SAKMainWindow::installLanguage()
     QString name = action->data().toString();
     SAKSettings::instance()->setValue(reinterpret_cast<SAKApplication*>(qApp)->settingStringLanguage(), language+"-"+name);
     reinterpret_cast<SAKApplication*>(qApp)->installLanguage();
-    QMessageBox::information(this, tr("重启生效"),
-                             tr("软件语言包已更改，重启软件生效！"));
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr("重启生效"), tr("软件语言包已更改，立即重启软件生效?"), QMessageBox::Yes|QMessageBox::No);
+    qDebug("%x",reply);
+    if (reply == QMessageBox::Yes) {
+        QString program = QApplication::applicationFilePath();
+        QStringList arguments = QApplication::arguments();
+        QString workingDirectory = QDir::currentPath();
+        QProcess::startDetached(program, arguments, workingDirectory);
+        QApplication::exit();
+    }
 }
 
 void SAKMainWindow::addRemovablePage()

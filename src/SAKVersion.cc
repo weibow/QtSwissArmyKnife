@@ -60,12 +60,12 @@ SAKVersion::~SAKVersion()
 
 bool SAKVersion::eventFilter(QObject *o, QEvent *e)
 {
-//    if (o == blog){
-//        if (e->type() == QEvent::MouseButtonPress){
-//            QDesktopServices::openUrl(QUrl(blog->text()));
-//            return true;
-//        }
-//    }
+    if (o == blog){
+        if (e->type() == QEvent::MouseButtonPress){
+            QDesktopServices::openUrl(QUrl(blog->text()));
+            return true;
+        }
+    }
 
     return QDialog::eventFilter(o, e);
 }
@@ -76,24 +76,4 @@ void SAKVersion::copyQQNum()
     temp.setText(qq->text());
     temp.selectAll();
     temp.copy();
-}
-
-void SAKVersion::on_pushButton2_clicked()
-{
-
-}
-
-void SAKVersion::on_pushButton2_clicked(bool checked)
-{
-
-}
-
-void SAKVersion::on_pushButton2_pressed()
-{
-
-}
-
-void SAKVersion::on_pushButtonCopy_clicked()
-{
-
 }

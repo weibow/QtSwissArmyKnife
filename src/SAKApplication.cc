@@ -17,6 +17,7 @@
 #include <QSettings>
 #include <QTextCursor>
 #include <QTranslator>
+#include <QDebug>
 
 SAKApplication::SAKApplication(int argc, char **argv):
     QApplication(argc, argv)
@@ -46,6 +47,11 @@ SAKApplication::~SAKApplication()
 
 void SAKApplication::installLanguage()
 {
+    QString path = qApp->applicationDirPath();
+    QString fileName = path+"/system.ini";
+    QSettings settings(fileName, QSettings::IniFormat);
+
+   static QTranslator* translator;
     QString language = SAKSettings::instance()->value(_settingStringLanguage).toString();
     QString qmName;
     if (language.isEmpty()){
@@ -64,12 +70,19 @@ void SAKApplication::installLanguage()
 //    qtTranslator.load(QString(":/translations/qt/qt_%1.qm").arg(qmName));
 //    qApp->installTranslator(&qtTranslator);
 
-    sakTranslator.load(QString(":/translations/sak/SAK_%1.qm").arg(qmName));
-    qApp->installTranslator(&sakTranslator);
+    if (translator != NULL) {
+        qApp->removeTranslator(translator);
+        delete translator;
+        translator = NULL;
+    }
+    translator = new QTranslator;
+    translator->load(QString(":/translations/sak/SAK_%1.qm").arg(qmName));
+    qApp->installTranslator(translator);
 
-    if (sender()){
+    if (sender()) {
         QAction *action = reinterpret_cast<QAction*>(sender());
         action->setChecked(true);
         QString title = action->data().toString();
     }
+    qDebug() << "hello" ;
 }
