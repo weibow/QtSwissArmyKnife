@@ -12,6 +12,9 @@
 #include "SAKSettings.hh"
 #include "SAKApplication.hh"
 #include "SAKMainWindow.hh"
+#include "SAKGlobal.hh"
+#include "SAKSerialPortTransmissionItemWidget.hh"
+#include "SAKSerialPortDeviceController.hh"
 
 #include <QTimer>
 #include <QSettings>
@@ -33,12 +36,34 @@ SAKApplication::SAKApplication(int argc, char **argv):
     mpMainWindow = new SAKMainWindow;
     mpMainWindow->show();
 
-    QTimer::singleShot(5*1000, [=](){
+    QTimer::singleShot(1, [=](){
         if (SAKSettings::instance()->enableAutoCheckForUpdate()){
             emit this->checkForUpdate();
         }
+
+        qDebug() <<"I";
     });
+//    QTimer::singleShot(5*1000, [=](){
+////        SAKSerialPortDeviceController::refresh();
+//		SAKSerialPortDebugPage::refreshDevice()
+//    });
+
+
+    //QTimer::singleShot(5*1000, [=](){});
 }
+
+//void SAKGlobal::initComComboBox(QComboBox *comboBox)
+//{
+//    if (comboBox){
+//        comboBox->clear();
+//        QList<QSerialPortInfo> coms = QSerialPortInfo::availablePorts();
+//        for(auto var:coms){
+//            comboBox->addItem(var.portName() + " " + var.description(), QVariant::fromValue(var));
+//        }
+//    }
+//}
+//
+
 
 SAKApplication::~SAKApplication()
 {

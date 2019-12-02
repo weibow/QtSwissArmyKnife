@@ -25,6 +25,11 @@ SAKSerialPortDebugPage::SAKSerialPortDebugPage(QWidget *parent)
 {
     setUpController();
     setWindowTitle(tr("串口调试"));
+
+//    QTimer::singleShot(5*1000, [=](){
+//        refreshDevice();
+//        qDebug() <<"h";
+//    });
 }
 
 SAKSerialPortDebugPage::~SAKSerialPortDebugPage()
@@ -69,7 +74,7 @@ void SAKSerialPortDebugPage::openOrColoseDevice()
 
         setUiEnable(true);
         emit deviceStatusChanged(false);
-    }else{
+    } else {
         switchPushButton->setText(tr("关闭"));
         const QString name = controller->name();
         const qint32 baudRate = controller->baudRate();
@@ -80,7 +85,7 @@ void SAKSerialPortDebugPage::openOrColoseDevice()
 
         connect(this, &SAKSerialPortDebugPage::writeDataRequest,serialPortAssistant, &SAKSerialPortDevice::writeBytes);
 
-        connect(serialPortAssistant, &SAKSerialPortDevice::bytesWriten,         this, &SAKSerialPortDebugPage::bytesWritten);
+        connect(serialPortAssistant, &SAKSerialPortDevice::bytesWriten,        this, &SAKSerialPortDebugPage::bytesWritten);
         connect(serialPortAssistant, &SAKSerialPortDevice::bytesRead,          this, &SAKSerialPortDebugPage::bytesRead);
         connect(serialPortAssistant, &SAKSerialPortDevice::messageChanged,     this, &SAKSerialPortDebugPage::outputMessage);
         connect(serialPortAssistant, &SAKSerialPortDevice::deviceStatuChanged, this, &SAKSerialPortDebugPage::changeDeviceStatus);

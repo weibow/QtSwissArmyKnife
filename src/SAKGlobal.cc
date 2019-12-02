@@ -112,12 +112,24 @@ QString SAKGlobal::getIODeviceTypeName(int type)
 #ifdef SAK_IMPORT_COM_MODULE
 void SAKGlobal::initComComboBox(QComboBox *comboBox)
 {
+    bool saveTextIsAvailable = false;
     if (comboBox){
+        comboBox->blockSignals(true);
+        QString currentText = comboBox->currentText();
+        QString tmpText;
         comboBox->clear();
         QList<QSerialPortInfo> coms = QSerialPortInfo::availablePorts();
-        for(auto var:coms){
-            comboBox->addItem(var.portName() + " " + var.description(), QVariant::fromValue(var));
+        for(auto var : coms){
+            tmpText = var.portName() + " " + var.description(), QVariant::fromValue(var);
+            if (tmpText == currentText) {
+                saveTextIsAvailable = true;
+            }
+            comboBox->addItem(tmpText);
+         }
+        if (saveTextIsAvailable == true) {
+            comboBox->setCurrentText(currentText);
         }
+        comboBox->blockSignals(false);
     }
 }
 #endif
@@ -191,8 +203,7 @@ void SAKGlobal::initIpComboBox(QComboBox *comboBox)
     }
 }
 
-void SAKGlobal::initInputTextFormatComboBox(QComboBox *comboBox)
-{
+void SAKGlobal::initInputTextFormatComboBox(QComboBox *comboBox) {
     if (comboBox){
         comboBox->clear();
 

@@ -18,6 +18,7 @@
 #include "SAKApplication.hh"
 
 #include "ui_SAKVersion.h"
+#include <QDebug>
 
 static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
 
@@ -33,14 +34,16 @@ SAKVersion::SAKVersion(QWidget *parent)
     email = ui->labelEmail;
     qq = ui->labelQQ;
     blog = ui->labelBlog;
-  //  blog->installEventFilter(this);
+    blog->installEventFilter(this);
     blog->setCursor(Qt::PointingHandCursor);
     copyrightLabel = ui->copyrightLabel;
 
     copyQQ = ui->pushButtonCopy;
 
     version->setText(reinterpret_cast<SAKApplication*>(qApp)->applicationVersion());
+    qDebug() << QString(__DATE__);
     datetime->setText(buildDate.toString("yyyy/MM/dd") + " " + QString(__TIME__) + QString(__DATE__));
+    qDebug() << QString(__DATE__).replace("  ", " 0");
     author->setText(QString("Qter"));
     email->setText(QString("wuuhii@outlook.com"));
     qq->setText(QString("952218522"));

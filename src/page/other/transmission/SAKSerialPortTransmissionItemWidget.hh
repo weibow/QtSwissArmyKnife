@@ -58,6 +58,10 @@ private slots:
     void on_customBaudrateCheckBox_clicked();
 private:
     void setUiEnable(bool enable);
+public:
+    void refresh(void);
+//public slots:
+//    bool eventFilter(QObject *watched, QEvent *event);
 #endif
 };
 

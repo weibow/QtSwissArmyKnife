@@ -17,5 +17,5 @@ contains(DEFINES, SAK_IMPORT_COM_MODULE){
     INCLUDEPATH += \
         src/serialport
 }else {
-    warning("The Qt edition has no serialport module, the program will not has serialport debuging functioin.")
+    warning("The Qt edition has no serialport module, the program will not has serialport debuging function.")
 }

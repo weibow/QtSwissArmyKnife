@@ -35,6 +35,9 @@ public:
     QString                     name();
     qint32                      baudRate();
 
+    void refreshCom();
+
+
     void refresh();
     void setUiEnable(bool enable);
 private:
@@ -48,6 +51,12 @@ private:
     QCheckBox *checkBoxCustomBaudrate   = nullptr;
 private slots:
     void on_checkBoxCustomBaudrate_clicked();
+    void on_comboBoxSerialports_activated(int index);
+    void on_comboBoxSerialports_activated(const QString &arg1);
+public slots:
+    void updatePort();						//refresh the port;
+public slots:
+    bool eventFilter(QObject *watched, QEvent *event);
 };
 
 #endif

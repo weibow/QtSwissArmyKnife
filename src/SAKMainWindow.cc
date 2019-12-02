@@ -123,7 +123,7 @@ void SAKMainWindow::AddTab()
      * 添加调试页面
      */
 #ifdef SAK_IMPORT_COM_MODULE
-    this->mpTabWidget->addTab( new SAKSerialPortDebugPage,  tr("串口调试"));
+    this->mpTabWidget->addTab(new SAKSerialPortDebugPage,  tr("串口调试"));
 #endif
     this->mpTabWidget->addTab(new SAKUdpDebugPage,          tr("UDP调试"));
     this->mpTabWidget->addTab(new SAKTcpClientDebugPage,    tr("TCP客户端"));

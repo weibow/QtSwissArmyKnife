@@ -154,4 +154,20 @@ void SAKSerialPortTransmissionItemWidget::setUiEnable(bool enable)
     stopBitscomboBox->setEnabled(enable);
     parityComboBox->setEnabled(enable);
 }
+
+void SAKSerialPortTransmissionItemWidget::refresh()
+{
+}
+
+//bool SAKSerialPortTransmissionItemWidget::eventFilter(QObject *watched, QEvent *event)
+//{
+//   if (watched == comComboBox)
+//   {
+//       if (event->type() == QEvent::MouseButtonPress)
+//       {
+//
+//       }
+//   }
+//
+//}
 #endif

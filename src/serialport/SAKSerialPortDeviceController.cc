@@ -13,6 +13,8 @@
 #include <QMetaEnum>
 #include <QLineEdit>
 #include <QSerialPortInfo>
+#include <QDebug>
+#include <QDialog>
 
 #include "SAKGlobal.hh"
 #include "SAKSerialPortDeviceController.hh"
@@ -31,12 +33,14 @@ SAKSerialPortDeviceController::SAKSerialPortDeviceController(QWidget *parent)
     checkBoxCustomBaudrate   = ui->checkBoxCustomBaudrate;
 
     refresh();
+    ui->comboBoxSerialports->installEventFilter(this);
 }
 
 SAKSerialPortDeviceController::~SAKSerialPortDeviceController()
 {
     delete ui;
 }
+
 
 void SAKSerialPortDeviceController::refresh()
 {
@@ -95,6 +99,10 @@ qint32 SAKSerialPortDeviceController::baudRate()
     return rate;
 }
 
+void SAKSerialPortDeviceController::refreshCom()
+{
+}
+
 void SAKSerialPortDeviceController::on_checkBoxCustomBaudrate_clicked()
 {
     if (checkBoxCustomBaudrate->isChecked()){
@@ -104,4 +112,41 @@ void SAKSerialPortDeviceController::on_checkBoxCustomBaudrate_clicked()
     }else{
         comboBoxBaudrate->setEditable(false);
     }
+}
+
+void SAKSerialPortDeviceController::on_comboBoxSerialports_activated(int index)
+{
+}
+
+void SAKSerialPortDeviceController::on_comboBoxSerialports_activated(const QString &arg1)
+{
+
+}
+
+void SAKSerialPortDeviceController::updatePort()
+{
+    QStringList newPortStringList;
+    const auto infos = QSerialPortInfo::availablePorts();
+    for (const QSerialPortInfo &info : infos)
+    {
+        newPortStringList += info.portName();
+    }
+
+}
+
+
+bool SAKSerialPortDeviceController::eventFilter(QObject *watched, QEvent *event)
+{
+    static int8_t refreshTime = 0;
+
+   if (watched == ui->comboBoxSerialports)
+   {
+       if (event->type() == QEvent::MouseButtonPress)
+       {
+            SAKGlobal::initComComboBox(ui->comboBoxSerialports);
+
+            qDebug() << refreshTime++;
+       }
+   }
+   return QWidget::eventFilter(watched, event);
 }
