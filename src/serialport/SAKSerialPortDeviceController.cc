@@ -114,15 +114,6 @@ void SAKSerialPortDeviceController::on_checkBoxCustomBaudrate_clicked()
     }
 }
 
-void SAKSerialPortDeviceController::on_comboBoxSerialports_activated(int index)
-{
-}
-
-void SAKSerialPortDeviceController::on_comboBoxSerialports_activated(const QString &arg1)
-{
-
-}
-
 void SAKSerialPortDeviceController::updatePort()
 {
     QStringList newPortStringList;
@@ -150,3 +141,8 @@ bool SAKSerialPortDeviceController::eventFilter(QObject *watched, QEvent *event)
    }
    return QWidget::eventFilter(watched, event);
 }
+
+
+
+
+

@@ -28,33 +28,44 @@ void SAKOutputDataFactory::run()
 void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManager::OutputParameters parameters)
 {
     QString str;
+    QString str2;
 
-    str.append("<font color=silver>[</font>");
+    str.append("<font color=silver>【</font>");
 
     if (parameters.showDate){
-        str.append(QDate::currentDate().toString("yyyy-MM-dd "));
+        str.append(QDate::currentDate().toString(" yyyy-MM-dd "));
         str = QString("<font color=silver>%1</font>").arg(str);
     }
 
     if (parameters.showTime){
         if (parameters.showMS){
-            str.append(QTime::currentTime().toString("hh:mm:ss.zzz "));
+            str.append(QTime::currentTime().toString(" hh:mm:ss.zzz "));
         }else {
-            str.append(QTime::currentTime().toString("hh:mm:ss "));
+            str.append(QTime::currentTime().toString(" hh:mm:ss "));
         }
         str = QString("<font color=silver>%1</font>").arg(str);
     }
 
-    if (parameters.isReceivedData){
+
+    if (parameters.isReceivedData && (parameters.showDate || parameters.showTime)){
         str.append("<font color=red>Rx</font>");
-    }else {
+    } else {
         str.append("<font color=blue>Tx</font>");
-    }
-    str.append("<font color=silver>] </font>");
+    };
+    str.append("<font color=silver>】</font>");
+
+
+//    if (parameters.isReceivedData) {
+//        str2 = "<font color=red></font>";
+//    } else {
+//        str2 = "<font color=blue></font>";
+//    }
+
+//    //str.append("<font color=silver>] </font>");
 
     if (parameters.textModel == SAKGlobal::Obin){
         for (int i = 0; i < rawData.length(); i++){
-            str.append(QString("%1 ").arg(QString::number(static_cast<uint8_t>(rawData.at(i)), 2), 8, '0'));
+            str.append(QString("%1%2 ").arg(QString::number(static_cast<uint8_t>(rawData.at(i)), 2), 8, '0'));
         }
     }else if (parameters.textModel == SAKGlobal::Ooct){
         for (int i = 0; i < rawData.length(); i++){

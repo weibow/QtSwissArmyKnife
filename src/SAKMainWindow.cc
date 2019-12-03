@@ -104,7 +104,7 @@ bool SAKMainWindow::eventFilter(QObject *obj, QEvent *event)
         if (obj == var){
             if (event->type() == QEvent::MouseButtonDblClick){
                 if (qqLabels.length() == 3){
-                    QApplication::clipboard()->setText(qqLabels.at(1)->text());
+                    QApplication::clipboard()->setText(qqLabels.at(2)->text());
                     return true;
                 }else{
                     Q_ASSERT_X(false, __FUNCTION__, "qq label error");

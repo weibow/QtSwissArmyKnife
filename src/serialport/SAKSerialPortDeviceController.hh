@@ -51,8 +51,8 @@ private:
     QCheckBox *checkBoxCustomBaudrate   = nullptr;
 private slots:
     void on_checkBoxCustomBaudrate_clicked();
-    void on_comboBoxSerialports_activated(int index);
-    void on_comboBoxSerialports_activated(const QString &arg1);
+//    void on_comboBoxSerialports_activated(int index);
+//    void on_comboBoxSerialports_activated(const QString &arg1);
 public slots:
     void updatePort();						//refresh the port;
 public slots:
