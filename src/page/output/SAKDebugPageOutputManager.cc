@@ -18,6 +18,7 @@
 #include <QDateTime>
 #include <QTextStream>
 #include <QFileDialog>
+#include <QDebug>
 
 SAKDebugPageOutputManager::SAKDebugPageOutputManager(SAKDebugPage *debugPage, QObject *parent)
     :QObject (parent)
@@ -42,6 +43,7 @@ SAKDebugPageOutputManager::SAKDebugPageOutputManager(SAKDebugPage *debugPage, QO
     clearOutputPushButton           = debugPage->clearOutputPushButton;
     saveOutputPushButton            = debugPage->saveOutputPushButton;
     outputTextBroswer               = debugPage->outputTextBroswer;
+    weightTextBroswer 				= debugPage->outputWeightBroswer;
 
     connect(saveOutputFileToFilecheckBox,   &QCheckBox::clicked, this, &SAKDebugPageOutputManager::saveOutputDataToFile);
     connect(autoWrapCheckBox,               &QCheckBox::clicked, this, &SAKDebugPageOutputManager::setLineWrapMode);
@@ -64,6 +66,7 @@ SAKDebugPageOutputManager::SAKDebugPageOutputManager(SAKDebugPage *debugPage, QO
     dataFactory = new SAKOutputDataFactory;
     connect(this, &SAKDebugPageOutputManager::cookData, dataFactory, &SAKOutputDataFactory::cookData);
     connect(dataFactory, &SAKOutputDataFactory::dataCooked, this, &SAKDebugPageOutputManager::outputData);
+    connect(dataFactory, &SAKOutputDataFactory::weightCooked, this, &SAKDebugPageOutputManager::outWeightData);
     dataFactory->start();
 
     outputSettings = new SAKSaveOutputDataSettings;
@@ -73,7 +76,9 @@ SAKDebugPageOutputManager::SAKDebugPageOutputManager(SAKDebugPage *debugPage, QO
     connect(&updateRxFlagTimer, &QTimer::timeout, this, &SAKDebugPageOutputManager::updateRxFlag);
     connect(&updateTxFlagTimer, &QTimer::timeout, this, &SAKDebugPageOutputManager::updateTxFlag);
 
-    outputTextBroswer->document()->setMaximumBlockCount(1000);
+    outputTextBroswer->document()->setMaximumBlockCount(10);
+    weightTextBroswer->document()->setMaximumBlockCount(1);
+
 }
 
 SAKDebugPageOutputManager::~SAKDebugPageOutputManager()
@@ -81,6 +86,84 @@ SAKDebugPageOutputManager::~SAKDebugPageOutputManager()
     dataFactory->terminate();
     delete dataFactory;
     delete outputSettings;
+}
+
+void SAKDebugPageOutputManager::clear()
+{
+    m_consoleDataBufferAscii.clear();
+    m_consoleDataBufferDec.clear();;
+    m_consoleDataBufferHex.clear();
+    m_bytesInStoredConsoleData = 0;
+    m_bytesInUnprocessedConsoleData = 0;
+    m_storedConsoleData.clear();
+    m_unprocessedConsoleData.clear();
+}
+
+void SAKDebugPageOutputManager::reInsertDataInConsole()
+{
+
+}
+
+/**
+ * Processes the data in m_unprocessedConsoleData (creates the log and the console strings).
+ *
+ * Note: m_unprocessedConsoleData is cleared in this function.
+ */
+void SAKDebugPageOutputManager::processDataInStoredData()
+{
+    for (auto el : m_unprocessedConsoleData)
+    {
+        if (el.type == STORED_DATA_CLEAR_ALL_STANDARD_CONSOLES) {
+            m_consoleDataBufferAscii.clear();
+            m_consoleDataBufferDec.clear();
+            m_consoleDataBufferHex.clear();
+
+            m_storedConsoleData.clear();
+            m_bytesInStoredConsoleData = 0;
+
+        } else {
+            bool isFromAddMessageDialog = (el.type == STORED_DATA_TYPE_USER_MESSAGE) ? true : false;
+            bool isTimeStamp = (el.type == STORED_DATA_TYPE_TIMESTAMP) ? true : false;
+            bool isNewLine = (el.type == STORED_DATA_TYPE_NEW_LINE) ? true : false;
+
+            m_storedConsoleData.push_back(el);
+            m_bytesInStoredConsoleData += el.data.size();
+            appendDataToConsoleStrings(el.data, el.isSend , isFromAddMessageDialog, isTimeStamp,
+                                       el.isFromCan, el.isFromI2cMaster, isNewLine);
+        }
+    }	//for(auto el : m_umprocessedConsoleData)
+
+    m_unprocessedConsoleData.clear();
+    m_bytesInUnprocessedConsoleData = 0;
+    m_unprocessedLogData.clear();
+}
+
+/*
+ *
+ */
+void SAKDebugPageOutputManager::appendDataToConsoleStrings(QByteArray &data, bool isSend, bool isUserMessage, bool isTimeStamp, bool isFromCan, bool isFromI2cMaster, bool isNewLine)
+{
+   QByteArray * dataArray = &data;
+   QByteArray tmpArray;
+
+   QString additionalInformation;
+   if (data.isEmpty())
+       return;
+   if (isNewLine)
+   {
+
+   }
+   else
+   {
+       if (isUserMessage || isTimeStamp)
+       {
+
+       }
+       else
+       {
+
+       }
+   }
 }
 
 void SAKDebugPageOutputManager::updateRxFlag()
@@ -184,6 +267,35 @@ void SAKDebugPageOutputManager::outputData(QString data)
     outputTextBroswer->append(data);
 }
 
+/*
+ *
+ */
+void SAKDebugPageOutputManager::outWeightData(QByteArray data)
+{
+    QString str;
+    QString weight = QString::fromLocal8Bit(data);
+
+    str.append("<font color=green size=72>");
+    if (weight.startsWith("wn")) {
+        str.append("净重:");
+    } else if (weight.startsWith("ww")) {
+        str.append("毛重:");
+    } else if (weight.startsWith("wt")) {
+        str.append("皮重:");
+    }
+
+    str.append("</font>");
+    str.append("<font color=red size=72><span style='white-space:pre;'>" );
+    bool ok;
+    QString tmpStr;
+    tmpStr.sprintf("%10.3f", weight.mid(2,7).toFloat(&ok));
+    str.append(tmpStr);
+    str.append("</font> </span>");
+    str.append("<font color=blue size=30>");
+    str.append(weight.right(2));
+    weightTextBroswer->append(str);
+}
+
 SAKDebugPageOutputManager::OutputParameters SAKDebugPageOutputManager::outputDataParameters(bool isReceivedData)
 {
     OutputParameters parameters;
@@ -191,7 +303,6 @@ SAKDebugPageOutputManager::OutputParameters SAKDebugPageOutputManager::outputDat
     parameters.showTime = showTimeCheckBox->isChecked();
     parameters.showMS   = showMsCheckBox->isChecked();
     parameters.isReceivedData = isReceivedData;
-
     parameters.textModel= outputTextFormatComboBox->currentData().toInt();
 
     return parameters;

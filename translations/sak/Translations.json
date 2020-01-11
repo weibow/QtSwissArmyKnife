@@ -13,5 +13,10 @@
         "locale": "America",
         "language": "en",
         "name": "English"
+    },
+    {
+        "locale": "Ameri3ca",
+        "language": "ewn",
+        "name": "Englideersh"
     }
 ]

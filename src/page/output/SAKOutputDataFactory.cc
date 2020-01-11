@@ -12,6 +12,7 @@
 #include <QApplication>
 #include "SAKGlobal.hh"
 #include "SAKOutputDataFactory.hh"
+#include <QDebug>
 
 SAKOutputDataFactory::SAKOutputDataFactory(QObject *parent)
     :QThread (parent)
@@ -25,43 +26,93 @@ void SAKOutputDataFactory::run()
     exec();
 }
 
+
 void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManager::OutputParameters parameters)
 {
     QString str;
-    QString str2;
+    int m;
 
-    str.append("<font color=silver>【</font>");
+    byteData.append(rawData);
+//    qDebug() << QString::fromLocal8Bit(rawData);
+//    qDebug() << "1" << QString::fromLocal8Bit(byteData);
 
-    if (parameters.showDate){
-        str.append(QDate::currentDate().toString(" yyyy-MM-dd "));
-        str = QString("<font color=silver>%1</font>").arg(str);
+    if (byteData.size() > 28)
+    {
+       byteData =byteData.right(28);
+//       qDebug() << byteData;
     }
 
-    if (parameters.showTime){
-        if (parameters.showMS){
-            str.append(QTime::currentTime().toString(" hh:mm:ss.zzz "));
-        }else {
-            str.append(QTime::currentTime().toString(" hh:mm:ss "));
+//    byteData = byteData.right(25);
+//    qDebug() << "41" << QString::fromLocal8Bit(byteData);
+    QStringList data = QString::fromLocal8Bit(byteData).split("\r\n");
+    int sizeNum = -1;
+    for (int k = 0; k  < data.length(); k++) {
+//        qDebug() << QString("data%1").arg(k + 1)  << data[k];
+        if (data[k].size() == 11) {
+            sizeNum = k;
         }
-        str = QString("<font color=silver>%1</font>").arg(str);
+//        qDebug() << data[k].size();
     }
+    if (sizeNum != -1)
+    {
+        emit weightCooked(data[sizeNum].toLocal8Bit());
+    }
+//    qDebug() << "DATA length =" << data.length();
+    byteData = data[data.length()-1].toLocal8Bit();
+//    qDebug() << QString::fromLocal8Bit(byteData);
 
+//    if (byteData.lastIndexOf("\r\n") != -1 && byteData.lastIndexOf("w") != -1)
+//    {
 
-    if (parameters.isReceivedData && (parameters.showDate || parameters.showTime)){
-        str.append("<font color=red>Rx</font>");
-    } else {
-        str.append("<font color=blue>Tx</font>");
-    };
-    str.append("<font color=silver>】</font>");
+//        if (byteData.lastIndexOf("\r\n") != -1)
+//        {
 
+//            data2 = byteData.left(byteData.lastIndexOf("\r\n"));
+//            if (byteData.lastIndexOf(("w")) != -1) {
+//                data2 = data2.right(byteData.size() - byteData.lastIndexOf("w"));
+//            }
+//            qDebug() << "2" << data2;
+//            emit weightCooked(data2);
+//        }
 
-//    if (parameters.isReceivedData) {
-//        str2 = "<font color=red></font>";
-//    } else {
-//        str2 = "<font color=blue></font>";
+//        byteData = byteData.right(byteData.size() - byteData.lastIndexOf("w"));
+//        qDebug() <<"3" << byteData;
+
 //    }
 
-//    //str.append("<font color=silver>] </font>");
+//    data2 = byteData.right(byteData.lastIndexOf("\r\n"));
+
+    if (1) {
+        if (parameters.showDate || parameters.showTime)
+        {
+        str.append("<font color=silver>【</font>");
+        }
+
+        if (parameters.showDate){
+        str.append(QDate::currentDate().toString(" yyyy-MM-dd "));
+        str = QString("<font color=silver>%1</font>").arg(str);
+        }
+
+        if (parameters.showTime)
+        {
+            if (parameters.showMS){
+                str.append(QTime::currentTime().toString(" hh:mm:ss.zzz "));
+            }else {
+                str.append(QTime::currentTime().toString(" hh:mm:ss "));
+            }
+            str = QString("<font color=silver>%1</font>").arg(str);
+        }
+        if (parameters.showDate || parameters.showTime)
+        {
+        if (parameters.isReceivedData){
+            str.append("<font color=red>Rx</font>");
+        } else {
+            str.append("<font color=blue>Tx</font>");
+        };
+        str.append("<font color=silver>】</font>");
+        }
+        str.append("<font color=silver></font>");
+    }
 
     if (parameters.textModel == SAKGlobal::Obin){
         for (int i = 0; i < rawData.length(); i++){
@@ -97,4 +148,5 @@ void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManage
     }
 
     emit dataCooked(str);
+
 }

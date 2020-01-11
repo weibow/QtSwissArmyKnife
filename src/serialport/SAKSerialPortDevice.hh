@@ -15,6 +15,8 @@
 #include <QThread>
 #include <QSerialPort>
 
+#include <QVector>
+
 class SAKSerialPortDebugPage;
 class SAKSerialPortDevice:public QThread
 {
@@ -39,6 +41,11 @@ private:
     const QSerialPort::Parity   _parity;
     QSerialPort                 *serialPort;
     SAKSerialPortDebugPage *debugPage;
+
+    ///The stored console data.
+    QVector<QByteArray> receiveData;
+    QByteArray receiveArray;
+
 
 signals:
     void bytesRead(QByteArray);

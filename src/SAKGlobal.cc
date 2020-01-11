@@ -64,8 +64,8 @@ QString SAKGlobal::dataPath()
     return path;
 }
 
-QString SAKGlobal::mkMutiDir(const QString path){
-
+QString SAKGlobal::mkMutiDir(const QString path)
+{
     QDir dir(path);
     if (dir.exists(path)){
         return path;

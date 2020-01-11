@@ -40,29 +40,10 @@ SAKApplication::SAKApplication(int argc, char **argv):
         if (SAKSettings::instance()->enableAutoCheckForUpdate()){
             emit this->checkForUpdate();
         }
-
         qDebug() <<"I";
+        qDebug() <<"see";
     });
-//    QTimer::singleShot(5*1000, [=](){
-////        SAKSerialPortDeviceController::refresh();
-//		SAKSerialPortDebugPage::refreshDevice()
-//    });
-
-
-    //QTimer::singleShot(5*1000, [=](){});
 }
-
-//void SAKGlobal::initComComboBox(QComboBox *comboBox)
-//{
-//    if (comboBox){
-//        comboBox->clear();
-//        QList<QSerialPortInfo> coms = QSerialPortInfo::availablePorts();
-//        for(auto var:coms){
-//            comboBox->addItem(var.portName() + " " + var.description(), QVariant::fromValue(var));
-//        }
-//    }
-//}
-//
 
 
 SAKApplication::~SAKApplication()
@@ -70,30 +51,27 @@ SAKApplication::~SAKApplication()
 
 }
 
+/*
+ *
+ */
 void SAKApplication::installLanguage()
 {
     QString path = qApp->applicationDirPath();
     QString fileName = path+"/system.ini";
     QSettings settings(fileName, QSettings::IniFormat);
 
-   static QTranslator* translator;
+    static QTranslator* translator;
     QString language = SAKSettings::instance()->value(_settingStringLanguage).toString();
     QString qmName;
-    if (language.isEmpty()){
+    if (language.isEmpty()) {
         if (QLocale().country() == QLocale::China){
             qmName = QString("zh_CN");
-        }else{
+        } else {
             qmName = QString("en");
         }
-    }else{
+    } else {
         qmName = language.split('-').first();
     }
-
-//    qtBaeTranslator.load(QString(":/translations/qt/qtbase_%1.qm").arg(qmName));
-//    qApp->installTranslator(&qtBaeTranslator);
-//
-//    qtTranslator.load(QString(":/translations/qt/qt_%1.qm").arg(qmName));
-//    qApp->installTranslator(&qtTranslator);
 
     if (translator != NULL) {
         qApp->removeTranslator(translator);

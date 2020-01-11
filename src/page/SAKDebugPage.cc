@@ -63,6 +63,7 @@ SAKDebugPage::SAKDebugPage(int type, QWidget *parent)
 
     connect(this, &SAKDebugPage::deviceStatusChanged, this, &SAKDebugPage::changedDeviceStatus);
     resize(800, 600);
+    setFixedSize(800, 600);
 
     clearInfoTimer.setInterval(8*1000);
     connect(&clearInfoTimer, &QTimer::timeout, this, &SAKDebugPage::cleanInfo);
@@ -327,6 +328,7 @@ void SAKDebugPage::initUiPointer()
     clearOutputPushButton   = ui->clearOutputPushButton;
     saveOutputPushButton    = ui->saveOutputPushButton;
     outputTextBroswer       = ui->outputTextBroswer;
+    outputWeightBroswer     = ui->weightText;
 
 
     /*

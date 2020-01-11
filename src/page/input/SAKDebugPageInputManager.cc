@@ -78,6 +78,7 @@ SAKDebugPageInputManager::SAKDebugPageInputManager(SAKDebugPage *debugPage, QObj
     updateCRC();
 }
 
+
 SAKDebugPageInputManager::~SAKDebugPageInputManager()
 {
     inputDataFactory->terminate();
@@ -211,7 +212,7 @@ void SAKDebugPageInputManager::setPresetData()
 {
     if (inputDataItemManager->isHidden()){
         inputDataItemManager->show();
-    }else{
+    } else {
         inputDataItemManager->activateWindow();
     }
 }

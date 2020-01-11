@@ -16,6 +16,8 @@
 
 #include <QTimer>
 #include <QObject>
+#include <QVector>
+
 
 class SAKOutputDataFactory;
 class SAKSaveOutputDataSettings;
@@ -36,7 +38,49 @@ public:
         bool isReceivedData;// 是否为接收到的数据
         int  textModel;     // 输出数据格式SAKGlobal::SAKTextFormat
     };
+public:
+       ///Clears all stored data.
+    void clear(void);
+
+    ///Reinserts the data into the consoles.
+    void reInsertDataInConsole(void);
+
 private:
+    ///The data buffer for the ascii console.
+    QString m_consoleDataBufferAscii;
+
+    ///The data buffer for the hex console.
+    QString m_consoleDataBufferHex;
+
+    ///The data buffer for the decimal console.
+    QString m_consoleDataBufferDec;
+
+    //Add the new data type
+    ///The unprocessed console data.
+    QVector<StoredData> m_unprocessedConsoleData;
+
+    ///The unprocessed log data.
+    QVector<StoredData> m_unprocessedLogData;
+
+    ///Bytes in m_unprocessedLogData;
+    quint32 m_bytesInUnprocessedConsoleData;
+
+    ///The stored console data.
+    QVector<StoredData> m_storedConsoleData;
+
+    ///Bytes in m_storedConsoleData;
+    quint32 m_bytesInStoredConsoleData;
+
+private:
+        ///Processes the data in m_storedData (creates the log and the console strings).
+    ///Note: m_storedData is cleared in this function.
+   void processDataInStoredData();
+   ///Appends data to the console strings (m_consoleDataBufferAscii, m_consoleDataBufferHex;
+   ///m_consoleDataBufferDec)
+   void appendDataToConsoleStrings(QByteArray& data, bool isSend, bool isUserMessage,
+                                   bool isTimeStamp, bool isFromCan, bool isFromI2cMaster, bool isNewLine);
+
+    //System origial data
     SAKDebugPage *debugPage;
     SAKOutputDataFactory *dataFactory;
     SAKSaveOutputDataSettings *outputSettings;
@@ -72,14 +116,24 @@ private:
     QPushButton  *clearOutputPushButton;
     QPushButton  *saveOutputPushButton;
     QTextBrowser *outputTextBroswer;
+    QTextBrowser *weightTextBroswer;
 
 private:
     void bytesRead(QByteArray data);
     void bytesWritten(QByteArray data);
     void outputData(QString data);
+    void outWeightData(QByteArray data);
     OutputParameters outputDataParameters(bool isReceivedData);
 signals:
     void cookData(QByteArray rawData, OutputParameters parameters);
+    void weightData(QByteArray weightdata);
+
+public slots:
+    //Reinserts the data into the mixed consoles.
+
+
+
+
 };
 Q_DECLARE_METATYPE(SAKDebugPageOutputManager::OutputParameters);
 

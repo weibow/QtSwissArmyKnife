@@ -60,9 +60,16 @@ void SAKSerialPortDevice::readBytes()
 {    
     serialPort->waitForReadyRead(debugPage->readWriteParameters().waitForReadyReadTime);
     QByteArray data = serialPort->readAll();    
-    if (data.isEmpty()){
+    if (data.isEmpty()) {
         return;
     }
+    receiveData.push_back(data);
+//    receiveArray.append(data);
+//    for (auto el : receiveData) {
+//        qDebug() << QString::fromLocal8Bit(el);			//  el.toStdString();
+//    }
+//    qDebug() << QString::fromLocal8Bit(receiveArray);
+
     emit bytesRead(data);
 }
 
@@ -72,7 +79,7 @@ void SAKSerialPortDevice::writeBytes(QByteArray data)
     serialPort->waitForBytesWritten(debugPage->readWriteParameters().waitForBytesWrittenTime);
     if (ret == -1){
         emit messageChanged(tr("串口发送数据失败：") + serialPort->errorString(), false);
-    }else{
+    } else {
         emit bytesWriten(data);
     }
 }

@@ -48,6 +48,96 @@ namespace Ui {
     class SAKDebugPage;
 }
 
+
+///The type of data in a StoredData struct.
+typedef enum
+{
+///Received data.
+STORED_DATA_TYPE_RECEIVE,
+
+///Send data.
+STORED_DATA_TYPE_SEND,
+
+///Timestamp.
+STORED_DATA_TYPE_TIMESTAMP,
+
+///User message (add message dialog).
+STORED_DATA_TYPE_USER_MESSAGE,
+
+///New line.
+STORED_DATA_TYPE_NEW_LINE,
+
+///Clear all standard consoles.
+STORED_DATA_CLEAR_ALL_STANDARD_CONSOLES,
+
+///Invalid entry.
+STORED_DATA_TYPE_INVALID
+
+}StoredDataType;
+
+///The stored console/log data.
+typedef struct
+{
+StoredDataType type;
+QByteArray data;
+bool isFromCan;
+bool isFromI2cMaster;
+bool isSend;
+
+}StoredData;
+
+
+///The precalculated data which is needed for the mixed console.
+typedef struct
+{   ///The number of pixels per character.
+int pixelsWide;
+
+///The divider for the bytes bytes per line calcualtion.
+double divider;
+
+///True if only the type is in the mixed console (ascii, or hex...).
+bool onlyOneType;
+
+///The bytes per decimal.
+int bytesPerDecimal;
+
+///The max. number of bytes per line.
+int maxBytePerLine;
+
+///The spaces for the ascii characters.
+QString asciiSpaces;
+
+///The spaces for the hex characters.
+QString hexSpaces;
+
+///The extra spaces for the hex characters.
+QString hexExtraSpaces;
+
+///The spaces for the decimal characters.
+QString decimalSpaces;
+
+
+}MixedConsoleData;
+
+///The precalculated data which is needed for the all consoles.
+typedef struct
+{
+///The data for the mixed console.
+MixedConsoleData mixedData;
+
+///The HTML data for time stamps and user messages.
+QString htmlMessageAndTimestamp;
+
+///The HTML data for received data.
+QString htmlReceived;
+
+///The HTML data for sent data.
+QString htmlSend;
+
+}ConsoleData;
+
+
+
 class SAKDebugPage : public QWidget
 {
     Q_OBJECT
@@ -193,6 +283,7 @@ protected:
     QPushButton *clearOutputPushButton          = nullptr;  // 清空输出按钮
     QPushButton *saveOutputPushButton           = nullptr;  // 保存输出按钮
     QTextBrowser *outputTextBroswer             = nullptr;  // 用于输出显示收发的数据
+    QTextBrowser *outputWeightBroswer		    = nullptr; //
 
     QString settingStringOutputTextFormat;
     QString settingStringShowDate;

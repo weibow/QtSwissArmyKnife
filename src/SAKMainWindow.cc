@@ -69,7 +69,6 @@ SAKMainWindow::SAKMainWindow(QWidget *parent)
     ui->setupUi(this);
     updateManager = new SAKUpdateManager(this);
 
-
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(mpTabWidget);
 
@@ -78,6 +77,7 @@ SAKMainWindow::SAKMainWindow(QWidget *parent)
     centralWidget->setLayout(layout);
 
     resize(800, 600);
+//    setFixedSize(800, 600);
     centralWidget->layout()->setContentsMargins(6, 6, 6, 0);
     setWindowTitle(tr("瑞士军刀--开发调试工具集") + " v" + reinterpret_cast<SAKApplication*>(qApp)->applicationVersion());
 
@@ -113,7 +113,6 @@ bool SAKMainWindow::eventFilter(QObject *obj, QEvent *event)
         }
     }
 
-
     return QMainWindow::eventFilter(obj, event);
 }
 
@@ -123,17 +122,17 @@ void SAKMainWindow::AddTab()
      * 添加调试页面
      */
 #ifdef SAK_IMPORT_COM_MODULE
-    this->mpTabWidget->addTab(new SAKSerialPortDebugPage,  tr("串口调试"));
+    this->mpTabWidget->addTab(new SAKSerialPortDebugPage, tr("串口调试"));
 #endif
-    this->mpTabWidget->addTab(new SAKUdpDebugPage,          tr("UDP调试"));
-    this->mpTabWidget->addTab(new SAKTcpClientDebugPage,    tr("TCP客户端"));
-    this->mpTabWidget->addTab(new SAKTcpServerDebugPage,    tr("TCP服务器"));
+    this->mpTabWidget->addTab(new SAKUdpDebugPage,        tr("UDP调试"));
+    this->mpTabWidget->addTab(new SAKTcpClientDebugPage,  tr("TCP客户端"));
+    this->mpTabWidget->addTab(new SAKTcpServerDebugPage,  tr("TCP服务器"));
     //this->mpTabWidget->addTab(new )
 
     /*
      * 隐藏关闭按钮（必须在调用setTabsClosable()函数后设置，否则不生效）
      */
-    for (int i = 0; i < mpTabWidget->count(); i++){
+    for (int i = 0; i < mpTabWidget->count(); i++) {
         mpTabWidget->tabBar()->setTabButton(i, QTabBar::RightSide, nullptr);
         mpTabWidget->tabBar()->setTabButton(i, QTabBar::LeftSide, nullptr);
     }
