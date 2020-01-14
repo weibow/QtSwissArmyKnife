@@ -22,6 +22,10 @@
 
 static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
 
+
+/*
+ *
+ */
 SAKVersion::SAKVersion(QWidget *parent)
     :QDialog(parent)
     ,ui(new Ui::SAKVersion)

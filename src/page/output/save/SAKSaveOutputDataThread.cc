@@ -22,6 +22,10 @@ SAKSaveOutputDataThread::SAKSaveOutputDataThread(QObject *parent)
     moveToThread(this);
 }
 
+
+/*
+ *
+ */
 void SAKSaveOutputDataThread::writeDataToFile(QByteArray data, SAKSaveOutputDataSettings::SaveOutputDataParamters parameters)
 {
     if(parameters.fileName.isEmpty()){

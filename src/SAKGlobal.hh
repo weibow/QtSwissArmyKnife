@@ -102,6 +102,8 @@ public:
      */
     static void initOutputTextFormatComboBox(QComboBox *comboBox);
 
+    static void initProtocolComboBox(QComboBox *comboBox);
+
     /**
      * @brief initCRCComboBox 初始化crc列表
      * @param comboBox 需要初始化的comboBox实例指针

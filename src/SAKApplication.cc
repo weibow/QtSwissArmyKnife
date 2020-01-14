@@ -22,6 +22,9 @@
 #include <QTranslator>
 #include <QDebug>
 
+/*
+ *
+ */
 SAKApplication::SAKApplication(int argc, char **argv):
     QApplication(argc, argv)
 {

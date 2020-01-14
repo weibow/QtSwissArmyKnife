@@ -9,6 +9,7 @@
  * If you want to know more about the project, please join our QQ group(952218522).
  * In addition, the email address of the project author is wuuhii@outlook.com.
  */
+
 #include <QDir>
 #include <QFile>
 #include <QDebug>
@@ -190,6 +191,9 @@ void SAKGlobal::initParityComboBox(QComboBox *comboBox)
 }
 #endif
 
+/*
+ *
+ */
 void SAKGlobal::initIpComboBox(QComboBox *comboBox)
 {
     if (comboBox){
@@ -203,10 +207,12 @@ void SAKGlobal::initIpComboBox(QComboBox *comboBox)
     }
 }
 
+/*
+ *
+ */
 void SAKGlobal::initInputTextFormatComboBox(QComboBox *comboBox) {
     if (comboBox){
         comboBox->clear();
-
         comboBox->addItem(tr("二进制"), Ibin);
         comboBox->addItem(tr("八进制"), Ioct);
         comboBox->addItem(tr("十进制"), Idec);
@@ -214,11 +220,14 @@ void SAKGlobal::initInputTextFormatComboBox(QComboBox *comboBox) {
         comboBox->addItem(QString("ASCII"), Iascii);
         comboBox->addItem(QString("UTF8"), Iutf8);
         comboBox->addItem(tr("系统编码"), Ilocal);
-
         comboBox->setCurrentIndex(4);
     }
 }
 
+
+/*
+ *  SAKGlobal
+ */
 void SAKGlobal::initOutputTextFormatComboBox(QComboBox *comboBox)
 {
     comboBox->addItem(tr("二进制"), Obin);
@@ -231,6 +240,14 @@ void SAKGlobal::initOutputTextFormatComboBox(QComboBox *comboBox)
     comboBox->addItem(QString("UCS4"), Oucs4);
     comboBox->addItem(tr("宽字符"), Ostdwstring);
     comboBox->addItem(tr("系统编码"), Olocal);
+}
+
+void SAKGlobal::initProtocolComboBox(QComboBox *comboBox)
+{
+    comboBox->addItem(tr("耀华A12E"), 0);
+    comboBox->addItem(tr("CAS"), 1);
+    comboBox->addItem(tr("条码秤内部协议"), 2);
+
 }
 
 void SAKGlobal::initCRCComboBox(QComboBox *comboBox)

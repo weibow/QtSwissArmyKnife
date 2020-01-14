@@ -272,6 +272,7 @@ protected:
     QLabel      *rxLabel                        = nullptr;  // 接受指示灯
     QLabel      *txLabel                        = nullptr;  // 发送指示灯
     QComboBox   *outputTextFormatComboBox       = nullptr;  // 输出模式复选框（接收）
+    QComboBox   *protocalComboBox				= nullptr;
     QCheckBox   *showDateCheckBox               = nullptr;  // 显示日期使能复选框
     QCheckBox   *autoWrapCheckBox               = nullptr;  // 自动换行使能复选框
     QCheckBox   *showTimeCheckBox               = nullptr;  // 显示时间使能复选框
@@ -292,6 +293,7 @@ protected:
     QString settingStringShowMs;
     QString settingStringShowRx;
     QString settingStringShowTx;
+    QString settingStringProtocol;
 
 private slots:
     void on_outputTextFormatComboBox_currentIndexChanged(int index);
@@ -330,6 +332,10 @@ protected:
     QPushButton *dataVisualizationPushButton;
 private slots:
     void on_dataVisualizationPushButton_clicked();
+
+    void on_protocalComboBox_currentIndexChanged(int index);
+
+    void on_protocalComboBox_currentIndexChanged(const QString &arg1);
 
 private:
 #ifdef SAK_IMPORT_CHARTS_MODULE

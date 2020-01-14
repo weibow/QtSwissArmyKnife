@@ -33,7 +33,8 @@ private:
     QByteArray byteData;
 signals:
     void dataCooked(QString data);
-    void weightCooked(QByteArray data);
+    void weightCooked(QByteArray data, SAKDebugPageOutputManager::OutputParameters parameters);
+
 };
 
 #endif

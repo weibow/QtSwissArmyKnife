@@ -27,46 +27,46 @@ void SAKOutputDataFactory::run()
 }
 
 
+/*
+ *
+ */
 void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManager::OutputParameters parameters)
 {
     QString str;
-    int m;
+//    int m;
 
     byteData.append(rawData);
-//    qDebug() << QString::fromLocal8Bit(rawData);
-//    qDebug() << "1" << QString::fromLocal8Bit(byteData);
 
-    if (byteData.size() > 28)
-    {
-       byteData =byteData.right(28);
-//       qDebug() << byteData;
-    }
 
-//    byteData = byteData.right(25);
-//    qDebug() << "41" << QString::fromLocal8Bit(byteData);
-    QStringList data = QString::fromLocal8Bit(byteData).split("\r\n");
-    int sizeNum = -1;
-    for (int k = 0; k  < data.length(); k++) {
-//        qDebug() << QString("data%1").arg(k + 1)  << data[k];
-        if (data[k].size() == 11) {
-            sizeNum = k;
+    if (parameters.protocol == 0) {
+        if (byteData.size() > 28)
+        {
+           byteData =byteData.right(28);
         }
-//        qDebug() << data[k].size();
+
+        QStringList data = QString::fromLocal8Bit(byteData).split("\r\n");
+        int sizeNum = -1;
+        for (int k = 0; k  < data.length(); k++) {
+            if (data[k].size() == 11) {
+                sizeNum = k;
+            }
+        }
+        if (sizeNum != -1)
+        {
+            emit weightCooked(data[sizeNum].toLocal8Bit(), parameters);
+         }
+        byteData = data[data.length()-1].toLocal8Bit();
+        qDebug() << QString::fromLocal8Bit(byteData);
+    } else {
+        emit weightCooked(rawData, parameters);
+        byteData.clear();
     }
-    if (sizeNum != -1)
-    {
-        emit weightCooked(data[sizeNum].toLocal8Bit());
-    }
-//    qDebug() << "DATA length =" << data.length();
-    byteData = data[data.length()-1].toLocal8Bit();
-//    qDebug() << QString::fromLocal8Bit(byteData);
+
 
 //    if (byteData.lastIndexOf("\r\n") != -1 && byteData.lastIndexOf("w") != -1)
 //    {
-
 //        if (byteData.lastIndexOf("\r\n") != -1)
 //        {
-
 //            data2 = byteData.left(byteData.lastIndexOf("\r\n"));
 //            if (byteData.lastIndexOf(("w")) != -1) {
 //                data2 = data2.right(byteData.size() - byteData.lastIndexOf("w"));
@@ -74,10 +74,8 @@ void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManage
 //            qDebug() << "2" << data2;
 //            emit weightCooked(data2);
 //        }
-
 //        byteData = byteData.right(byteData.size() - byteData.lastIndexOf("w"));
 //        qDebug() <<"3" << byteData;
-
 //    }
 
 //    data2 = byteData.right(byteData.lastIndexOf("\r\n"));
@@ -85,12 +83,12 @@ void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManage
     if (1) {
         if (parameters.showDate || parameters.showTime)
         {
-        str.append("<font color=silver>【</font>");
+            str.append("<font color=silver>【</font>");
         }
 
         if (parameters.showDate){
-        str.append(QDate::currentDate().toString(" yyyy-MM-dd "));
-        str = QString("<font color=silver>%1</font>").arg(str);
+            str.append(QDate::currentDate().toString(" yyyy-MM-dd "));
+            str = QString("<font color=silver>%1</font>").arg(str);
         }
 
         if (parameters.showTime)
@@ -104,19 +102,19 @@ void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManage
         }
         if (parameters.showDate || parameters.showTime)
         {
-        if (parameters.isReceivedData){
-            str.append("<font color=red>Rx</font>");
-        } else {
-            str.append("<font color=blue>Tx</font>");
-        };
-        str.append("<font color=silver>】</font>");
+            if (parameters.isReceivedData) {
+                str.append("<font color=red>Rx</font>");
+            } else {
+                str.append("<font color=blue>Tx</font>");
+            };
+            str.append("<font color=silver>】</font>");
         }
         str.append("<font color=silver></font>");
     }
 
     if (parameters.textModel == SAKGlobal::Obin){
         for (int i = 0; i < rawData.length(); i++){
-            str.append(QString("%1%2 ").arg(QString::number(static_cast<uint8_t>(rawData.at(i)), 2), 8, '0'));
+            str.append(QString("%1 ").arg(QString::number(static_cast<uint8_t>(rawData.at(i)), 2), 8, '0'));
         }
     }else if (parameters.textModel == SAKGlobal::Ooct){
         for (int i = 0; i < rawData.length(); i++){

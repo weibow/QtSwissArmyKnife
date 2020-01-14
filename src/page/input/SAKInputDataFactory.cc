@@ -23,9 +23,14 @@ SAKInputDataFactory::SAKInputDataFactory(QObject *parent)
     moveToThread(this);
 }
 
+
+/*
+ *
+ */
 void SAKInputDataFactory:: cookData(QString rawData, SAKDebugPageInputManager::InputParameters parameters)
 {
     QByteArray data = rawDataToArray(rawData, parameters);
+
     if (parameters.addCRC){
         uint32_t crc  = crcCalculate(data, parameters.crcModel);
         uint8_t  crc8  = static_cast<uint8_t>(crc);
@@ -50,10 +55,12 @@ void SAKInputDataFactory:: cookData(QString rawData, SAKDebugPageInputManager::I
             break;
         }
     }
-
     emit dataCooked(data);
 }
 
+/*
+ *  crcCalculate
+ */
 quint32 SAKInputDataFactory::crcCalculate(QByteArray data, int model)
 {
     int bitsWidth = crcInterface->getBitsWidth(static_cast<SAKCRCInterface::CRCModel>(model));
@@ -61,6 +68,7 @@ quint32 SAKInputDataFactory::crcCalculate(QByteArray data, int model)
     uint16_t crc16;
     uint32_t crc32;
     quint32 crc = 0;
+
     switch (bitsWidth) {
     case 8:
         crc8 = crcInterface->crcCalculate<uint8_t>(reinterpret_cast<uint8_t*>(data.data()), static_cast<quint64>(data.length()), static_cast<SAKCRCInterface::CRCModel>(model));
@@ -89,28 +97,28 @@ QByteArray SAKInputDataFactory::rawDataToArray(QString rawData, SAKDebugPageInpu
         for (QString str:strList){
             data.append(static_cast<int8_t>(QString(str).toInt(nullptr, 2)));
         }
-    }else if (parameters.inputModel == SAKGlobal::Ioct){
+    } else if (parameters.inputModel == SAKGlobal::Ioct){
         QStringList strList = rawData.split(' ');
         for (QString str:strList){
             data.append(static_cast<int8_t>(QString(str).toInt(nullptr, 8)));
         }
-    }else if (parameters.inputModel == SAKGlobal::Idec){
+    } else if (parameters.inputModel == SAKGlobal::Idec){
         QStringList strList = rawData.split(' ');
         for (QString str:strList){
             data.append(static_cast<int8_t>(QString(str).toInt(nullptr, 10)));
         }
-    }else if (parameters.inputModel == SAKGlobal::Ihex){
+    } else if (parameters.inputModel == SAKGlobal::Ihex){
         QStringList strList = rawData.split(' ');
         for (QString str:strList){
             data.append(static_cast<int8_t>(QString(str).toInt(nullptr, 16)));
         }
-    }else if (parameters.inputModel == SAKGlobal::Iascii){
+    } else if (parameters.inputModel == SAKGlobal::Iascii){
         data = rawData.toLatin1();
-    }else if (parameters.inputModel == SAKGlobal::Iutf8){
+    } else if (parameters.inputModel == SAKGlobal::Iutf8){
         data = rawData.toUtf8();
-    }else if (parameters.inputModel == SAKGlobal::Ilocal){
+    } else if (parameters.inputModel == SAKGlobal::Ilocal){
         data = rawData.toLocal8Bit();
-    }else {
+    } else {
         data = rawData.toLocal8Bit();
         Q_ASSERT_X(false, __FUNCTION__, "Unknow input mode");
     }

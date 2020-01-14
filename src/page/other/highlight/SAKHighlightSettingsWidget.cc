@@ -53,7 +53,6 @@ void SAKHighlightSettingsWidget::addLabel(QString str)
         keyWords.append(temp);
     }
 
-
     QPushButton* tempLabel = new QPushButton(str);
     tempLabel->installEventFilter(this);
     labelList.append(tempLabel);

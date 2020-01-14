@@ -37,7 +37,7 @@
 
 #include "ui_SAKDebugPage.h"
 
-#define MINI_READ_WRITE_WATINGT_TIME 5   // 读写等待最小时间(单位为：ms)
+#define MINI_READ_WRITE_WATINGT_TIME 5      // 读写等待最小时间(单位为：ms)
 
 SAKDebugPage::SAKDebugPage(int type, QWidget *parent)
     :QWidget(parent)
@@ -145,7 +145,6 @@ void SAKDebugPage::openOrColoseDevice()
 
 void SAKDebugPage::refreshDevice()
 {
-
 }
 
 QWidget *SAKDebugPage::controllerWidget()
@@ -274,7 +273,7 @@ void SAKDebugPage::on_showRxDataCheckBox_clicked()
 
 void SAKDebugPage::on_showTxDataCheckBox_clicked()
 {
-    if (!isInitializing){
+    if (!isInitializing) {
         SAKSettings::instance()->setValue(settingStringShowTx, QVariant::fromValue(showTxDataCheckBox->isChecked()));
     }
 }
@@ -317,6 +316,8 @@ void SAKDebugPage::initUiPointer()
     rxLabel                 = ui->rxLabel;
     txLabel                 = ui->txLabel;
     outputTextFormatComboBox= ui->outputTextFormatComboBox;
+    protocalComboBox 		= ui->protocalComboBox;
+
     autoWrapCheckBox        = ui->autoWrapCheckBox;
     showDateCheckBox        = ui->showDateCheckBox;
     showTimeCheckBox        = ui->showTimeCheckBox;
@@ -420,15 +421,19 @@ void SAKDebugPage::initInputSettingString()
     settingStringcrcParameterModel = QString("%1/parameterModel").arg(settingKey);
 }
 
+/*
+ *
+ */
 void SAKDebugPage::initOutputSettingString()
 {
     settingStringOutputTextFormat = QString("%1/outputTextFormat").arg(settingKey);
-    settingStringShowDate    = QString("%1/showDate").arg(settingKey);
-    settingStringAutoWrap    = QString("%1/autoWrap").arg(settingKey);
-    settingStringShowTime    = QString("%1/showTime").arg(settingKey);
-    settingStringShowMs      = QString("%1/showMs").arg(settingKey);
-    settingStringShowRx      = QString("%1/showRx").arg(settingKey);
-    settingStringShowTx      = QString("%1/showTx").arg(settingKey);
+    settingStringShowDate    =	    QString("%1/showDate").arg(settingKey);
+    settingStringAutoWrap    = 		QString("%1/autoWrap").arg(settingKey);
+    settingStringShowTime    =      QString("%1/showTime").arg(settingKey);
+    settingStringShowMs      =      QString("%1/showMs").arg(settingKey);
+    settingStringShowRx      =      QString("%1/showRx").arg(settingKey);
+    settingStringShowTx      =      QString("%1/showTx").arg(settingKey);
+    settingStringProtocol	 = 		QString("%1/protocol").arg(settingKey);
 }
 
 void SAKDebugPage::readinSettings()
@@ -437,13 +442,14 @@ void SAKDebugPage::readinSettings()
     readinOutputSettings();
 }
 
+
 void SAKDebugPage::readinInputSettings()
 {
     QVariant var = SAKSettings::instance()->value(settingStringInputModel);
     int index = 0;
     if (var.isNull()){
         index = 4;
-    }else{
+    } else {
         index = var.toInt();
     }
     inputModelComboBox->setCurrentIndex(index);
@@ -467,13 +473,15 @@ void SAKDebugPage::readinInputSettings()
     crcParameterModelsComboBox->setCurrentIndex(index);
 }
 
+
+
 void SAKDebugPage::readinOutputSettings()
 {
     // 某些设置默认为勾选
     auto setValue = [](QVariant &var){
         if (var.isNull()){
             return true;
-        }else{
+        } else {
             return var.toBool();
         }
     };
@@ -482,10 +490,19 @@ void SAKDebugPage::readinOutputSettings()
     int index = 0;
     if (var.isNull()){
         index = 4;
-    }else{
+    } else {
         index = var.toInt();
     }
     outputTextFormatComboBox->setCurrentIndex(index);
+
+    var = SAKSettings::instance()->value(settingStringProtocol);
+    if (var.isNull()) {
+        index = 0;
+    } else {
+        index= var.toInt();
+    }
+    protocalComboBox->setCurrentIndex(index);
+
 
     var = SAKSettings::instance()->value(settingStringShowDate);
     bool value = SAKSettings::instance()->value(settingStringShowDate).toBool();
@@ -508,4 +525,22 @@ void SAKDebugPage::readinOutputSettings()
     var = SAKSettings::instance()->value(settingStringShowTx);
     value = setValue(var);
     showTxDataCheckBox->setChecked(value);
+}
+
+
+/*
+ *
+ */
+void SAKDebugPage::on_protocalComboBox_currentIndexChanged(int index)
+{
+    qDebug() << "currect index" << index;
+    if (!isInitializing) {
+        SAKSettings::instance()->setValue(settingStringProtocol, QVariant::fromValue(index));
+    }
+}
+
+
+void SAKDebugPage::on_protocalComboBox_currentIndexChanged(const QString &arg1)
+{
+
 }

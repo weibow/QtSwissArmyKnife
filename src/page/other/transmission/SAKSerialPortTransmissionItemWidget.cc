@@ -102,7 +102,9 @@ void SAKSerialPortTransmissionItemWidget::on_enableCheckBox_clicked()
         serialPort->setStopBits(stopBitscomboBox->currentData().value<QSerialPort::StopBits>());
         if (serialPort->open(QSerialPort::ReadWrite)){
             this->setUiEnable(false);
+
             connect(serialPort, &QSerialPort::readyRead, this, &SAKSerialPortTransmissionItemWidget::read, Qt::QueuedConnection);
+
 #ifdef QT_DEBUG
             qInfo() << tr("串口打开成功")
                     << tr("串口名称：") << serialPort->portName()

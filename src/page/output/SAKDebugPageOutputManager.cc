@@ -32,6 +32,8 @@ SAKDebugPageOutputManager::SAKDebugPageOutputManager(SAKDebugPage *debugPage, QO
     rxLabel                         = debugPage->rxLabel;
     txLabel                         = debugPage->txLabel;
     outputTextFormatComboBox        = debugPage->outputTextFormatComboBox;
+    protocalComboBox				= debugPage->protocalComboBox;
+
     showDateCheckBox                = debugPage->showDateCheckBox;
     autoWrapCheckBox                = debugPage->autoWrapCheckBox;
     showTimeCheckBox                = debugPage->showTimeCheckBox;
@@ -53,6 +55,7 @@ SAKDebugPageOutputManager::SAKDebugPageOutputManager(SAKDebugPage *debugPage, QO
 
     // 初始化数据格式预选框
     SAKGlobal::initOutputTextFormatComboBox(outputTextFormatComboBox);
+    SAKGlobal::initProtocolComboBox(protocalComboBox);//)
 
     /*
      * 处理已接收或者是已发送的数据
@@ -270,29 +273,65 @@ void SAKDebugPageOutputManager::outputData(QString data)
 /*
  *
  */
-void SAKDebugPageOutputManager::outWeightData(QByteArray data)
+void SAKDebugPageOutputManager::outWeightData(QByteArray data, SAKDebugPageOutputManager::OutputParameters parameters)
 {
     QString str;
     QString weight = QString::fromLocal8Bit(data);
+    QString tmpStr;
+    float tmpFloat;
+    bool ok;
+    static QByteArray resData;
 
-    str.append("<font color=green size=72>");
-    if (weight.startsWith("wn")) {
+
+    switch (parameters.protocol)
+    {
+    case 0:			//yaoHua A12E
+        str.append("<font color=green size=72>");
+        if (weight.startsWith("wn")) {
         str.append("净重:");
-    } else if (weight.startsWith("ww")) {
+        } else if (weight.startsWith("ww")) {
         str.append("毛重:");
-    } else if (weight.startsWith("wt")) {
+        } else if (weight.startsWith("wt")) {
         str.append("皮重:");
+        }
+        str.append("</font>");
+        str.append("<font color=red size=72><span style='white-space:pre;'>" );
+        tmpFloat = weight.mid(2, 7).toFloat(&ok);
+        switch (6 -  weight.mid(2, 7).indexOf(".", -1)) {
+         case 0:
+        tmpStr.sprintf("%8f", tmpFloat);
+        break;
+         case 1:
+        tmpStr.sprintf("%8.1f", tmpFloat);
+        break;
+         case 2:
+        tmpStr.sprintf("%8.2f", tmpFloat);
+        break;
+         case 3:
+        tmpStr.sprintf("%8.3f", tmpFloat);
+        break;
+         case 4:
+        tmpStr.sprintf("%8.4f", tmpFloat);
+        break;
+         default:
+        tmpStr.sprintf("%7.0f", tmpFloat);
+        break;
+        }
+        str.append(tmpStr);
+        str.append("</font> </span>");
+        str.append("<font color=blue size=30>");
+        str.append(weight.right(2));
+        str.append("\r\nseeyouagain");
+     case 1:		//CAS protocol
+        break;
+     case 2:		//Label protocolfromLatin1
+        for (int i = 0; i < data.length(); i++){
+            str.append(QString("%1 ").arg(QString::number(static_cast<uint8_t>(data.at(i)), 16), 2, '0'));
+        }
+        resData.append(data);
+        break;
     }
 
-    str.append("</font>");
-    str.append("<font color=red size=72><span style='white-space:pre;'>" );
-    bool ok;
-    QString tmpStr;
-    tmpStr.sprintf("%10.3f", weight.mid(2,7).toFloat(&ok));
-    str.append(tmpStr);
-    str.append("</font> </span>");
-    str.append("<font color=blue size=30>");
-    str.append(weight.right(2));
     weightTextBroswer->append(str);
 }
 
@@ -304,6 +343,6 @@ SAKDebugPageOutputManager::OutputParameters SAKDebugPageOutputManager::outputDat
     parameters.showMS   = showMsCheckBox->isChecked();
     parameters.isReceivedData = isReceivedData;
     parameters.textModel= outputTextFormatComboBox->currentData().toInt();
-
+    parameters.protocol = protocalComboBox->currentIndex();
     return parameters;
 }

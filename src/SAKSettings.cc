@@ -13,12 +13,15 @@
 #include "SAKSettings.hh"
 
 #include <QApplication>
+#include <QDebug>
 
 SAKSettings* SAKSettings::_instance = nullptr;
 SAKSettings* SAKSettings::instance()
 {
     if (!_instance){
         const QString fileName = QString("%1/%2.ini").arg(SAKGlobal::dataPath()).arg(qApp->applicationName());
+
+        qDebug() << fileName;
         new SAKSettings(fileName, QSettings::IniFormat, qApp);
     }
 

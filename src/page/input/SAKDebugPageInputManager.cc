@@ -147,6 +147,7 @@ void SAKDebugPageInputManager::saveInputDataToFile()
 void SAKDebugPageInputManager::readinFile()
 {
     QString fileName = QFileDialog::getOpenFileName(nullptr, tr("打开文件"));
+
     if (!fileName.isEmpty()){
         QFile file(fileName);
         if(file.open(QFile::ReadOnly)){
@@ -224,6 +225,7 @@ void SAKDebugPageInputManager::sendPresetData()
 
 void SAKDebugPageInputManager::initParameters()
 {
+
     inputParameters.addCRC = addCRCCheckBox->isChecked();
     inputParameters.bigEndian = bigeEndianCheckBox->isChecked();
     inputParameters.cycleTime = cycleTimeLineEdit->text().toInt();
@@ -237,6 +239,7 @@ void SAKDebugPageInputManager::initParameters()
     inputParameters.inputModel = inputModelComboBox->currentData().toInt();
     inputParameters.crcModel = crcParameterModelsComboBox->currentData().toInt();
 }
+
 
 void SAKDebugPageInputManager::setCycleEnable()
 {
@@ -263,6 +266,10 @@ void SAKDebugPageInputManager::cycleTimerTimeout()
     sendRawData();
 }
 
+
+/*
+ *
+ */
 void SAKDebugPageInputManager::updateCRC()
 {
     QString rawData = inputTextEdit->toPlainText();

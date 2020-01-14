@@ -37,6 +37,7 @@ public:
         bool showMS;        // 是否显示毫秒
         bool isReceivedData;// 是否为接收到的数据
         int  textModel;     // 输出数据格式SAKGlobal::SAKTextFormat
+        int protocol;       // current Protocol
     };
 public:
        ///Clears all stored data.
@@ -105,6 +106,7 @@ private:
     QLabel       *rxLabel;
     QLabel       *txLabel;
     QComboBox    *outputTextFormatComboBox;
+    QComboBox 	 *protocalComboBox;
     QCheckBox    *showDateCheckBox;
     QCheckBox    *autoWrapCheckBox;
     QCheckBox    *showTimeCheckBox;
@@ -118,11 +120,12 @@ private:
     QTextBrowser *outputTextBroswer;
     QTextBrowser *weightTextBroswer;
 
+
 private:
     void bytesRead(QByteArray data);
     void bytesWritten(QByteArray data);
     void outputData(QString data);
-    void outWeightData(QByteArray data);
+    void outWeightData(QByteArray data, SAKDebugPageOutputManager::OutputParameters parameters);
     OutputParameters outputDataParameters(bool isReceivedData);
 signals:
     void cookData(QByteArray rawData, OutputParameters parameters);

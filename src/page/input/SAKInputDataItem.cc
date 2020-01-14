@@ -66,6 +66,10 @@ void SAKInputDataItem::addDataAction(QPushButton *menuPushButton)
     connect(action, &QAction::triggered, this, &SAKInputDataItem::sendRawData);
 }
 
+
+/*
+ *
+ */
 void SAKInputDataItem::removeDataAction(QPushButton *menuPushButton)
 {
     if (!menuPushButton){
