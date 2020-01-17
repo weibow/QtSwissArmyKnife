@@ -224,7 +224,6 @@ void SAKGlobal::initInputTextFormatComboBox(QComboBox *comboBox) {
     }
 }
 
-
 /*
  *  SAKGlobal
  */
@@ -260,4 +259,3 @@ void SAKGlobal::initCRCComboBox(QComboBox *comboBox)
         }
     }
 }
-

@@ -22,6 +22,7 @@ SAKCodingStyle::SAKCodingStyle(QObject *parent)
 
 }
 
+
 void SAKCodingStyle::helloWorld()
 {
 

@@ -89,6 +89,8 @@ quint32 SAKInputDataFactory::crcCalculate(QByteArray data, int model)
     return crc;
 }
 
+
+
 QByteArray SAKInputDataFactory::rawDataToArray(QString rawData, SAKDebugPageInputManager::InputParameters parameters)
 {
     QByteArray data;

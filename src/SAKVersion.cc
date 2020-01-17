@@ -19,9 +19,11 @@
 
 #include "ui_SAKVersion.h"
 #include <QDebug>
+#include <QSemaphore>
+
+QSemaphore freeBytes(100);
 
 static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-
 
 /*
  *

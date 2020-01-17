@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
     f();
     auto s = [&b]{cout << b << endl;};
     //b = 324;
-        s();
-        int m = [](int x) { return [](int y) { return y * 2; }(x)+6; }(5);
+    s();
+    int m = [](int x) { return [](int y) { return y * 2; }(x)+6; }(5);
     cout << "m=" << m << endl;
     SAKApplication a(argc, argv);
     return a.exec();

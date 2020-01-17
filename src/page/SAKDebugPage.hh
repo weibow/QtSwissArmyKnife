@@ -335,7 +335,6 @@ private slots:
 
     void on_protocalComboBox_currentIndexChanged(int index);
 
-    void on_protocalComboBox_currentIndexChanged(const QString &arg1);
 
 private:
 #ifdef SAK_IMPORT_CHARTS_MODULE

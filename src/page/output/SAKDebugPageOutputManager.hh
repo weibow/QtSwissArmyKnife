@@ -38,13 +38,71 @@ public:
         bool isReceivedData;// 是否为接收到的数据
         int  textModel;     // 输出数据格式SAKGlobal::SAKTextFormat
         int protocol;       // current Protocol
+        };
+//    #pragma pack(push, 1)
+    #pragma pack (1)
+   typedef struct {
+        uint8_t STX;		//1
+        uint32_t PackageNO; //5
+        uint32_t cmd;		//9
+        uint32_t res;		//13
+        uint16_t len;		//15
+        uint8_t sum;		//16
+        uint8_t ETX;		//17
+    } PackageHead;
+//    #pragma pack(pop)
+    #pragma pack ()
+
+#pragma pack(1)
+    typedef struct
+    {
+        int32_t Net_Wei; // 有符号净重
+        int32_t Tare_Wei; // 有符号皮重
+        uint8_t Unit; // 单位
+        uint8_t Dot; // 小数位数
+        uint16_t Flag; // 测量结果标志
+        uint16_t Voltage;
+    } WeightT;
+#pragma pack()
+
+
+    enum WeightCmd{
+        CMD_TEST_COM 	  = 0xA8000,
+        CMD_PEEL_SET	  = 0xC0009,
+        CMD_ZERO_SET	  = 0xC0007,
+        CMD_AD_READ		  = 0xC0008,
+
+        CMD_ZERO_CALI 	  = 0xC000A,
+        CMD_FULL_CALI 	  = 0xC000B,
+        CMD_ACCELE_SET 	  = 0xC000C,
+        CMD_DOT_SET 	  = 0xC000D,
+        CMD_REPAIR_SET 	  = 0xC000E,
+        CMD_FULL_SET	  = 0xC000F,
+        CMD_DIV_SET		  = 0xC0010,
+        CMD_UNIT_SET	  = 0xC0011,
+        CMD_PEEL_MODE	  = 0xC0015,
+        CMD_TEMPERATURE   = 0xC0016,
+        CMD_WEIGHT_MODE   = 0xC0017,
+        CMD_MIN_WEIGHT    = 0xC0018,
+        CMD_PARAMETER_SET = 0xC0012,
+        CMD_FACTORY_MODE  = 0xC0014,
+        CMD_READ_VER	  = 0xC0023,
+
     };
+
+
 public:
        ///Clears all stored data.
     void clear(void);
 
     ///Reinserts the data into the consoles.
     void reInsertDataInConsole(void);
+//    quint32 crcCalculate(QByteArray data, int model);
+    uint16_t Drv_CRC16_Calculate(uint8_t *buf, uint8_t len);
+    /*
+     * Add sum caculate
+     */
+    uint8_t add_sum(uint8_t *_pBuf, uint16_t _usLen);
 
 private:
     ///The data buffer for the ascii console.
@@ -71,6 +129,8 @@ private:
 
     ///Bytes in m_storedConsoleData;
     quint32 m_bytesInStoredConsoleData;
+
+    QString weightStyleStr;
 
 private:
         ///Processes the data in m_storedData (creates the log and the console strings).
@@ -122,20 +182,20 @@ private:
 
 
 private:
+
     void bytesRead(QByteArray data);
     void bytesWritten(QByteArray data);
     void outputData(QString data);
     void outWeightData(QByteArray data, SAKDebugPageOutputManager::OutputParameters parameters);
     OutputParameters outputDataParameters(bool isReceivedData);
+    void LabelProtocol_process(uint8_t* data,int32_t len, uint32_t cmd);
+    void CasProtocol_process(uint8_t* data, int32_t len);
 signals:
     void cookData(QByteArray rawData, OutputParameters parameters);
     void weightData(QByteArray weightdata);
 
 public slots:
     //Reinserts the data into the mixed consoles.
-
-
-
 
 };
 Q_DECLARE_METATYPE(SAKDebugPageOutputManager::OutputParameters);

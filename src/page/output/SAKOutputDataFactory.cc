@@ -33,84 +33,65 @@ void SAKOutputDataFactory::run()
 void SAKOutputDataFactory::cookData(QByteArray rawData, SAKDebugPageOutputManager::OutputParameters parameters)
 {
     QString str;
-//    int m;
 
     byteData.append(rawData);
 
+    if (parameters.isReceivedData) {
+        if (parameters.protocol == 0 ) {
+            if (byteData.size() > 28)
+            {
+               byteData =byteData.right(28);
+            }
 
-    if (parameters.protocol == 0) {
-        if (byteData.size() > 28)
-        {
-           byteData =byteData.right(28);
-        }
-
-        QStringList data = QString::fromLocal8Bit(byteData).split("\r\n");
-        int sizeNum = -1;
-        for (int k = 0; k  < data.length(); k++) {
-            if (data[k].size() == 11) {
+            QStringList data = QString::fromLocal8Bit(byteData).split("\r\n");
+            int sizeNum = -1;
+            for (int k = 0; k  < data.length(); k++) {
+                if (data[k].size() == 11) {
                 sizeNum = k;
+                }
             }
+            if (sizeNum != -1)
+            {
+                emit weightCooked(data[sizeNum].toLocal8Bit(), parameters);
+             }
+            byteData = data[data.length()-1].toLocal8Bit();
+            qDebug() << QString::fromLocal8Bit(byteData);
+        } else {
+            emit weightCooked(rawData, parameters);
+            byteData.clear();
         }
-        if (sizeNum != -1)
-        {
-            emit weightCooked(data[sizeNum].toLocal8Bit(), parameters);
-         }
-        byteData = data[data.length()-1].toLocal8Bit();
-        qDebug() << QString::fromLocal8Bit(byteData);
-    } else {
-        emit weightCooked(rawData, parameters);
-        byteData.clear();
     }
 
 
-//    if (byteData.lastIndexOf("\r\n") != -1 && byteData.lastIndexOf("w") != -1)
-//    {
-//        if (byteData.lastIndexOf("\r\n") != -1)
-//        {
-//            data2 = byteData.left(byteData.lastIndexOf("\r\n"));
-//            if (byteData.lastIndexOf(("w")) != -1) {
-//                data2 = data2.right(byteData.size() - byteData.lastIndexOf("w"));
-//            }
-//            qDebug() << "2" << data2;
-//            emit weightCooked(data2);
-//        }
-//        byteData = byteData.right(byteData.size() - byteData.lastIndexOf("w"));
-//        qDebug() <<"3" << byteData;
-//    }
-
-//    data2 = byteData.right(byteData.lastIndexOf("\r\n"));
-
-    if (1) {
-        if (parameters.showDate || parameters.showTime)
-        {
-            str.append("<font color=silver>【</font>");
-        }
-
-        if (parameters.showDate){
-            str.append(QDate::currentDate().toString(" yyyy-MM-dd "));
-            str = QString("<font color=silver>%1</font>").arg(str);
-        }
-
-        if (parameters.showTime)
-        {
-            if (parameters.showMS){
-                str.append(QTime::currentTime().toString(" hh:mm:ss.zzz "));
-            }else {
-                str.append(QTime::currentTime().toString(" hh:mm:ss "));
-            }
-            str = QString("<font color=silver>%1</font>").arg(str);
-        }
-        if (parameters.showDate || parameters.showTime)
-        {
-            if (parameters.isReceivedData) {
-                str.append("<font color=red>Rx</font>");
-            } else {
-                str.append("<font color=blue>Tx</font>");
-            };
-            str.append("<font color=silver>】</font>");
-        }
-        str.append("<font color=silver></font>");
+    if (parameters.showDate || parameters.showTime)
+    {
+        str.append("<font color=silver>[</font>");
     }
+
+    if (parameters.showDate){
+        str.append(QDate::currentDate().toString(" yyyy-MM-dd "));
+        str = QString("<font color=silver>%1</font>").arg(str);
+    }
+
+    if (parameters.showTime)
+    {
+        if (parameters.showMS){
+        str.append(QTime::currentTime().toString(" hh:mm:ss.zzz "));
+        }else {
+        str.append(QTime::currentTime().toString(" hh:mm:ss "));
+        }
+        str = QString("<font color=silver>%1</font>").arg(str);
+    }
+    if (parameters.showDate || parameters.showTime)
+    {
+        if (parameters.isReceivedData) {
+        str.append("<font color=red>Rx</font>");
+        } else {
+        str.append("<font color=blue>Tx</font>");
+        };
+        str.append("<font color=silver>]</font>");
+    }
+    str.append("<font color=silver></font>");
 
     if (parameters.textModel == SAKGlobal::Obin){
         for (int i = 0; i < rawData.length(); i++){

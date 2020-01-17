@@ -236,6 +236,7 @@ void SAKMainWindow::initOptionMenu()
      * 软件样式，设置默认样式需要重启软件
      */
     QMenu *stylesheetMenu = new QMenu(tr("皮肤"));
+
     optionMenu->addMenu(stylesheetMenu);
     defaultStyleSheetAction = new QAction(tr("Qt默认样式"), this);
     defaultStyleSheetAction->setCheckable(true);
@@ -382,6 +383,7 @@ void SAKMainWindow::initLinksMenu()
 void SAKMainWindow::initStatusBar()
 {
     QStringList info;
+
     info << tr("QQ交流群") << QString("952218522") << tr("(双击复制)");
     for(auto var:info){
         QLabel *label = new QLabel(var, this);

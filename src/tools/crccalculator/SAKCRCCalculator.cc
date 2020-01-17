@@ -129,6 +129,7 @@ void SAKCRCCalculator::calculate()
     if (hexRadioBt->isChecked()){
         QString str = inputTextEdit->toPlainText();
         QStringList strList = str.split(' ');
+
         char ch;
         for (int i = 0; i < strList.length(); i++){
             if (strList.at(i).isEmpty()){
@@ -137,7 +138,7 @@ void SAKCRCCalculator::calculate()
             ch = static_cast<char>(strList.at(i).toInt(nullptr, 16));
             inputArray.append(ch);
         }
-    }else{
+    } else {
         inputArray = inputTextEdit->toPlainText().toLatin1();
     }
 

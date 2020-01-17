@@ -62,8 +62,8 @@ SAKDebugPage::SAKDebugPage(int type, QWidget *parent)
     _readWriteParameters.waitForBytesWrittenTime = MINI_READ_WRITE_WATINGT_TIME;
 
     connect(this, &SAKDebugPage::deviceStatusChanged, this, &SAKDebugPage::changedDeviceStatus);
-    resize(800, 600);
-    setFixedSize(800, 600);
+//    resize(1016, 667);
+//    setFixedSize(800, 600);
 
     clearInfoTimer.setInterval(8*1000);
     connect(&clearInfoTimer, &QTimer::timeout, this, &SAKDebugPage::cleanInfo);
@@ -540,7 +540,3 @@ void SAKDebugPage::on_protocalComboBox_currentIndexChanged(int index)
 }
 
 
-void SAKDebugPage::on_protocalComboBox_currentIndexChanged(const QString &arg1)
-{
-
-}
